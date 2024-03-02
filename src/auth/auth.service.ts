@@ -6,7 +6,6 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Logger } from 'winston';
 import { SignUpDTO } from './dto/signUp.dto';
-import { ModulesEnum } from './enums/modules.enum';
 import { ResponseDTO } from '../helpers/dto/response.dto';
 import { ErrorEnum } from 'src/helpers/enums/error.enum';
 
@@ -27,6 +26,7 @@ export class AuthService {
         if (!bcrypt.compareSync(password, authResponse.password)) {
           return this.jwtService.sign({
             userId,
+            modules: authResponse.modules,
           });
         }
       }
@@ -37,19 +37,14 @@ export class AuthService {
     }
   }
 
-  async signup({ userId, password }: SignUpDTO) {
+  async signup({ userId, password, modules }: SignUpDTO) {
     try {
       const hashedPassword = bcrypt.hashSync(password, 10);
 
       const auth = this.authRepository.create({
         userId,
         password: hashedPassword,
-        modules: [
-          ModulesEnum.ADMIN,
-          ModulesEnum.AUTH,
-          ModulesEnum.FINANCE,
-          ModulesEnum.PROFILE,
-        ],
+        modules,
       });
       await this.authRepository.save(auth);
       return new ResponseDTO({ message: 'Auth Created!' });

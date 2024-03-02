@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { ModulesEnum } from '../enums/modules.enum';
 
 export class SignUpDTO {
   @ApiProperty()
@@ -9,4 +10,7 @@ export class SignUpDTO {
 
   @IsString()
   userId: string;
+
+  @IsEnum(ModulesEnum, { each: true })
+  modules: ModulesEnum[];
 }

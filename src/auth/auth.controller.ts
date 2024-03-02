@@ -15,7 +15,7 @@ export class AuthController {
   async login(@Body() data: SignUpDTO) {
     return this.authService.login(data);
   }
-  @Post('signup')
+  @Post('sign-up')
   async signup(@Body() data) {
     return this.authService.signup(data);
   }
