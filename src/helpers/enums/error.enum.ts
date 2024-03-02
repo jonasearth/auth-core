@@ -1,0 +1,4 @@
+export enum ErrorEnum {
+  UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
+  NOT_FOUND = `NOT_FOUND`,
+}

@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  auth-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${EXTERNAL_PORT}:${INTERNAL_PORT}"
+      - "${EXTERNAL_TCP_PORT}:${INTERNAL_TCP_PORT}"
+    volumes:
+      - type: bind
+        source: .
+        target: /src
+    networks:
+      - services
+    environment:
+      - NODE_ENV=production
+      - INTERNAL_TCP_PORT=${INTERNAL_TCP_PORT}
+      - EXTERNAL_TCP_PORT=${EXTERNAL_TCP_PORT}
+      - INTERNAL_PORT=${INTERNAL_PORT}
+      - EXTERNAL_PORT=${EXTERNAL_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    depends_on:
+      - auth-db
+    command: npm start
+
+  auth-db:
+    image: postgres
+    restart: always
+    networks:
+      - services
+    ports:
+      - "${POSTGRES_EXTERNAL_PORT}:${POSTGRES_INTERNAL_PORT}"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+networks:
+  services:
+    name: services
+    external: true

@@ -38,7 +38,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 3000 
 
 ingress:
@@ -59,10 +59,10 @@ ingress:
 
 resources:
   limits:
-    cpu: 500m
-    memory: 128Mi
-  requests:
     cpu: 300m
+    memory: 384Mi
+  requests:
+    cpu: 100m
     memory: 128Mi
 
 autoscaling:
@@ -82,3 +82,13 @@ env:
   values:
   - name: NODE_ENV
     value: prod
+  - name: POSTGRES_PASSWORD
+    value: "Password@1"
+  - name: POSTGRES_USER
+    value: "admin"
+  - name: POSTGRES_DB
+    value: auth-db  
+  - name: POSTGRES_HOST
+    value: auth-db 
+  - name: POSTGRES_INTERNAL_PORT
+    value: 5432  
